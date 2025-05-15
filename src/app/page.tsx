@@ -1,7 +1,21 @@
+import Link from 'next/link'
+
 const Home = () => {
   return (
-    <div className="h-screen w-screen flex justify-center items-center font-roboto">
-      mosAIc
+    <div className="h-screen w-screen flex flex-col gap-3 justify-center items-center font-noto">
+      <span className="text-8xl font-semibold text-primary-foreground">
+        mosAIc
+      </span>
+      <span className="text-muted-foreground italic w-[600px] text-center">
+        From words to colors — Type a prompt, hit generate, and let AI craft a
+        unique color palette that captures your vision perfectly.
+      </span>
+      <Link
+        href="/generate"
+        className="bg-primary text-primary-foreground font-semibold px-6 py-2 rounded-full cursor-pointer hover:brightness-90 mt-3"
+      >
+        Get started <span className="ml-1">&rarr;</span>
+      </Link>
     </div>
   )
 }

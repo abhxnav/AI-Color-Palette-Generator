@@ -1,9 +1,14 @@
 import type { Metadata } from 'next'
-import { Roboto } from 'next/font/google'
+import { Noto_Sans, Roboto } from 'next/font/google'
 import '@/app/globals.css'
 
 const roboto = Roboto({
   variable: '--font-roboto',
+  subsets: ['latin'],
+})
+
+const noto = Noto_Sans({
+  variable: '--font-noto',
   subsets: ['latin'],
 })
 
@@ -19,7 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable} antialiased`}>{children}</body>
+      <body
+        className={`${noto.variable} ${roboto.variable} antialiased bg-background`}
+      >
+        {children}
+      </body>
     </html>
   )
 }
