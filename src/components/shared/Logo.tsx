@@ -1,7 +1,6 @@
 import clsx from 'clsx'
 
 const Logo = ({ className }: { className?: string }) => {
-  console.log(className)
   return (
     <span
       className={clsx(

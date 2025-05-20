@@ -1,43 +1,59 @@
 'use client'
 
-import { Button, Logo } from '@/components'
-import { Textarea } from '@/components/ui'
-import { Loader2 } from 'lucide-react'
+import { ColorPalette, Logo, PromptInput } from '@/components'
+import { toast } from 'sonner'
 import { useState } from 'react'
+import { cleanUpColors } from '@/lib/utils'
 
 const Generate = () => {
-  const [prompt, setPrompt] = useState<string>('')
+  const [inputPrompt, setInputPrompt] = useState<string>('')
   const [loading, setLoading] = useState(false)
+  const [palette, setPalette] = useState<ColorPalette | null>(null)
+
+  const handleGeneration = async () => {
+    try {
+      setLoading(true)
+      setPalette(null)
+
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        body: JSON.stringify({ inputPrompt }),
+      })
+
+      const responseJson = await response.json()
+
+      if (responseJson.error) {
+        throw new Error(responseJson.errorMessage || 'Something went wrong.')
+      }
+
+      const colors = cleanUpColors(responseJson?.colors)
+
+      const colorsArray = colors
+        ?.split(', ')
+        .map((item: String) => item.split(': '))
+
+      const colorPalette = Object.fromEntries(colorsArray)
+
+      setPalette(colorPalette as ColorPalette)
+    } catch (error: any) {
+      toast.error('Failed to generate color palette.')
+      console.error('Error generating color palette:', error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="flex">
       {/* Sidebar */}
       <div className="min-w-[300px] w-[25vw] h-screen flex flex-col gap-10 p-7">
         <Logo className="text-5xl!" />
-        <div className="flex flex-col gap-2">
-          <Textarea
-            className="min-h-60"
-            placeholder="Describe your vision here to generate a color palette"
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            disabled={loading}
-          />
-          <Button
-            className="bg-primary text-primary-foreground font-semibold px-6 py-2 rounded-full cursor-pointer hover:brightness-90 mt-1"
-            disabled={loading}
-          >
-            {loading ? (
-              <div className="flex gap-2 items-center justify-center">
-                <Loader2 size={20} className="animate-spin" />
-                <p>Generating...</p>
-              </div>
-            ) : (
-              <div>
-                Generate <span className="ml-1">&rarr;</span>
-              </div>
-            )}
-          </Button>
-        </div>
+        <PromptInput
+          inputPrompt={inputPrompt}
+          setInputPrompt={setInputPrompt}
+          handleGeneration={handleGeneration}
+          loading={loading}
+        />
       </div>
 
       {/* Divider */}
@@ -45,9 +61,7 @@ const Generate = () => {
 
       {/* Palette */}
       <div className="w-full h-screen p-7">
-        <div className="size-full border-2 rounded-xl flex items-center justify-center border-border">
-          Palette
-        </div>
+        <ColorPalette colorPalette={palette} />
       </div>
     </div>
   )

@@ -7,14 +7,32 @@ export const POST = async (req: NextRequest) => {
   try {
     const { inputPrompt } = await req.json()
 
+    if (!inputPrompt || inputPrompt.trim().length < 5) {
+      return NextResponse.json(
+        {
+          error: true,
+          errorMessage: 'Prompt is too short or missing.',
+        },
+        { status: 400 }
+      )
+    }
+
     const requestBody = {
       model: 'deepseek/deepseek-prover-v2:free',
       messages: [
         {
           role: 'system',
-          content: `You are an expert color theorist and UI designer with deep knowledge of web and app design. I will give you a description of a product, brand, mood, or theme. Based on that, you must generate a precise and modern color palette for digital interfaces. Always reply using this exact format - 
-          Primary: {color}, Secondary: {color}, Neutral Light: {color}, Neutral Dark: {color}, Accent: {color}, Semantic/Error: {color}, Warning/Info: {color}.
-          Use hex codes only. Do not include any explanations, text, or extra information — only the color values in the exact format above.`,
+          content: `You are an expert color theorist and UI designer with deep knowledge of web and app design. I will give you a short product or brand description. Based on that, you must generate a precise and modern color palette for digital interfaces. Return the output as a single plain unformatted string, in this exact format only:
+
+          Background: {hex}, Surface (cards): {hex}, Primary Text: {hex}, Secondary Text: {hex}, Accent/Button: {hex}, Hover/Focus: {hex}, Border/Dividers: {hex}, Semantic/Error: {hex}, Warning/Info: {hex}
+          
+          Do not return code blocks (no backticks, triple backticks, or markdown)
+          Do not include newlines (\n), tabs, or indentation
+          Do not include quotes, arrays, brackets, or any JSON formatting
+          Do not add language tags like plaintext
+          Do not return anything before or after the color string — only the strict format above
+          Do not include any metadata about the response content
+          Only return the exact format, nothing more, nothing less.`,
         },
         {
           role: 'user',
@@ -35,13 +53,24 @@ export const POST = async (req: NextRequest) => {
       }
     )
 
+    if (!userRequest.ok) {
+      const errText = await userRequest.text()
+      throw new Error(errText)
+    }
+
     const userRequestResponse = await userRequest.json()
 
     return NextResponse.json({
-      error: null,
+      error: false,
       colors: userRequestResponse?.choices[0]?.message?.content,
     })
-  } catch (error) {
-    return NextResponse.json({ error: 'Error generating palette', colors: [] })
+  } catch (err: any) {
+    return NextResponse.json(
+      {
+        error: true,
+        errorMessage: err?.message || 'Unknown error occurred.',
+      },
+      { status: 500 }
+    )
   }
 }

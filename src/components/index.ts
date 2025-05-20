@@ -1,2 +1,5 @@
+// Shared
 export { default as Logo } from '@/components/shared/Logo'
-export { Button, buttonVariants } from '@/components/ui/button'
+
+export { default as PromptInput } from '@/components/PromptInput'
+export { default as ColorPalette } from '@/components/ColorPalette'
