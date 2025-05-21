@@ -8,7 +8,7 @@ import { cleanUpColors } from '@/lib/utils'
 const Generate = () => {
   const [inputPrompt, setInputPrompt] = useState<string>('')
   const [loading, setLoading] = useState(false)
-  const [palette, setPalette] = useState<ColorPalette | null>(null)
+  const [palette, setPalette] = useState<PaletteColor[] | null>(null)
 
   const handleGeneration = async () => {
     try {
@@ -26,15 +26,14 @@ const Generate = () => {
         throw new Error(responseJson.errorMessage || 'Something went wrong.')
       }
 
-      const colors = cleanUpColors(responseJson?.colors)
+      const cleaned = cleanUpColors(responseJson?.colors)
 
-      const colorsArray = colors
-        ?.split(', ')
-        .map((item: String) => item.split(': '))
+      const pairs = cleaned
+        .split(', ')
+        .map((entry: string) => entry.split(': '))
+        .map(([label, hex]) => ({ label, hex }))
 
-      const colorPalette = Object.fromEntries(colorsArray)
-
-      setPalette(colorPalette as ColorPalette)
+      setPalette(pairs)
     } catch (error: any) {
       toast.error('Failed to generate color palette.')
       console.error('Error generating color palette:', error.message)
