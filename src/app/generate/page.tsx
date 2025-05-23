@@ -59,8 +59,8 @@ const Generate = () => {
       <div className="w-0.5 h-[90vh] bg-border mt-[5vh]" />
 
       {/* Palette */}
-      <div className="w-full h-screen p-7">
-        <ColorPalette colorPalette={palette} />
+      <div className="w-full h-screen p-14">
+        <ColorPalette colorPalette={palette} isGenerating={loading} />
       </div>
     </div>
   )
