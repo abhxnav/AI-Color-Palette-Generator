@@ -3,7 +3,8 @@
 import { ColorPalette, Logo, PromptInput } from '@/components'
 import { toast } from 'sonner'
 import { useState } from 'react'
-import { cleanUpColors } from '@/lib/utils'
+import { generatePaletteFromPrompt } from '@/lib/generators/generatePaletteFromPrompt'
+import { generateTitle } from '@/lib/generators/generateTitle'
 
 const Generate = () => {
   const [inputPrompt, setInputPrompt] = useState<string>('')
@@ -15,23 +16,7 @@ const Generate = () => {
       setLoading(true)
       setPalette(null)
 
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        body: JSON.stringify({ inputPrompt }),
-      })
-
-      const responseJson = await response.json()
-
-      if (responseJson.error) {
-        throw new Error(responseJson.errorMessage || 'Something went wrong.')
-      }
-
-      const cleaned = cleanUpColors(responseJson?.colors)
-
-      const pairs = cleaned
-        .split(', ')
-        .map((entry: string) => entry.split(': '))
-        .map(([label, hex]) => ({ label, hex }))
+      const pairs = await generatePaletteFromPrompt(inputPrompt)
 
       setPalette(pairs)
     } catch (error: any) {

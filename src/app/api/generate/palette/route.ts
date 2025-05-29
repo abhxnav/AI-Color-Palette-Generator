@@ -68,7 +68,9 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json(
       {
         error: true,
-        errorMessage: err?.message || 'Unknown error occurred.',
+        errorMessage:
+          err?.message ||
+          'Unknown error occurred while generating color palette.',
       },
       { status: 500 }
     )
