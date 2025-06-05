@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Noto_Sans, Roboto } from 'next/font/google'
 import { Toaster } from '@/components/ui'
 import '@/app/globals.css'
+import { UserProvider } from '@/contexts/UserContext'
 
 const roboto = Roboto({
   variable: '--font-roboto',
@@ -28,8 +29,10 @@ export default function RootLayout({
       <body
         className={`${noto.variable} ${roboto.variable} antialiased bg-background font-noto`}
       >
-        {children}
-        <Toaster duration={3000} position="bottom-right" />
+        <UserProvider>
+          {children}
+          <Toaster duration={3000} position="bottom-right" />
+        </UserProvider>
       </body>
     </html>
   )

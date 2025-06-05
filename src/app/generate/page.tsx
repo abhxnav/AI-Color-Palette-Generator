@@ -4,7 +4,6 @@ import { ColorPalette, Logo, PromptInput } from '@/components'
 import { toast } from 'sonner'
 import { useState } from 'react'
 import { generatePaletteFromPrompt } from '@/lib/generators/generatePaletteFromPrompt'
-import { generateTitle } from '@/lib/generators/generateTitle'
 
 const Generate = () => {
   const [inputPrompt, setInputPrompt] = useState<string>('')
