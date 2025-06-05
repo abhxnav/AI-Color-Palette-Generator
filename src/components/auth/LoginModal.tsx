@@ -2,45 +2,51 @@
 
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { toast } from 'sonner'
-import { Button } from '@/components/ui'
 import { Loader2 } from 'lucide-react'
-import { signUp } from '@/actions/auth.actions'
+import { Button, Separator } from '@/components'
 
-interface SignupModalProps {
+import GoogleIcon from '@/../public/assets/icons/google.svg'
+import { signIn, signInWithGoogle } from '@/actions/auth.actions'
+
+interface LoginModalProps {
   isOpen: boolean
   onClose: () => void
   onSwitch: () => void
 }
 
-const SignupModal = ({ isOpen, onClose, onSwitch }: SignupModalProps) => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+const LoginModal = ({ isOpen, onClose, onSwitch }: LoginModalProps) => {
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
 
-  const isValidEmail = (email: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  const router = useRouter()
 
-  const handleSignup = async () => {
-    if (!isValidEmail(email)) {
-      toast.error('Please enter a valid email.')
-      return
-    }
-
-    if (password.length < 6) {
-      toast.error('Password must be at least 6 characters.')
-      return
-    }
-
+  const handleLoginWithEmailPassword = async () => {
     try {
       setLoading(true)
 
-      const data = await signUp(email, password)
+      const data = await signIn(email, password)
 
       if (data) {
-        toast.success('Sign up successful! Please check your email to verify.')
-        onClose()
+        router.push('/generate')
+        toast.success('Login successful!')
       }
+    } catch (error: any) {
+      toast.error(error.message || 'Something went wrong')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleLoginWithGoogle = async () => {
+    try {
+      setLoading(true)
+      localStorage.setItem('google-login-success', '1') // flag for toast
+
+      await signInWithGoogle()
     } catch (error: any) {
       toast.error(error.message || 'Something went wrong')
     } finally {
@@ -55,12 +61,13 @@ const SignupModal = ({ isOpen, onClose, onSwitch }: SignupModalProps) => {
       <div className="bg-background rounded-md p-6 w-[90%] max-w-sm shadow-xl relative">
         <Button
           onClick={onClose}
+          disabled={loading}
           className="absolute top-2 right-3 text-xl cursor-pointer bg-transparent hover:bg-transparent"
         >
           &times;
         </Button>
 
-        <h2 className="text-lg font-semibold mb-4">Sign Up</h2>
+        <h2 className="text-lg font-semibold mb-4">Login</h2>
 
         <input
           type="email"
@@ -80,33 +87,44 @@ const SignupModal = ({ isOpen, onClose, onSwitch }: SignupModalProps) => {
 
         <div className="w-full flex flex-col gap-2 items-center justify-center">
           <Button
-            onClick={handleSignup}
+            onClick={handleLoginWithEmailPassword}
             disabled={loading}
             className="bg-primary text-primary-foreground font-semibold px-6 py-2 rounded-full cursor-pointer hover:brightness-90 w-full"
           >
             {loading ? (
               <div className="flex gap-2 items-center justify-center">
                 <Loader2 size={20} className="animate-spin" />
-                <p>Signing up...</p>
+                <p>Loggin in...</p>
               </div>
             ) : (
-              <span>Sign Up</span>
+              <span>Login</span>
             )}
           </Button>
           <div className="text-sm">
-            Already have an account?{' '}
+            Don't have an account?{' '}
             <span
               className="text-primary brightness-80 underline cursor-pointer hover:brightness-90"
               onClick={onSwitch}
             >
-              Login
+              Sign up
             </span>
           </div>
         </div>
+
+        <Separator className="my-4 bg-black/25" />
+
+        <Button
+          onClick={handleLoginWithGoogle}
+          disabled={loading}
+          className="bg-card text-primary-foreground shadow-xl shadow-black/20 px-6 py-2 rounded-full cursor-pointer hover:bg-background hover:brightness-90 flex gap-2 w-full"
+        >
+          <Image src={GoogleIcon} alt="login" width={20} height={20} />
+          <span>Sign in with Google</span>
+        </Button>
       </div>
     </div>,
     document.body
   )
 }
 
-export default SignupModal
+export default LoginModal

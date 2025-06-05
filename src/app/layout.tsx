@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Noto_Sans, Roboto } from 'next/font/google'
-import { Toaster } from '@/components/ui'
+import { Toaster } from '@/components'
 import '@/app/globals.css'
 import { UserProvider } from '@/contexts/UserContext'
 

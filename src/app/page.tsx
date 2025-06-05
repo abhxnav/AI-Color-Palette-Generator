@@ -4,6 +4,7 @@ import {
   AnimatedLogo,
   AnimatedTagline,
   LoginModal,
+  ProfileDropdown,
   SignupModal,
 } from '@/components'
 import Link from 'next/link'
@@ -12,17 +13,14 @@ import { fadeInVariant } from '@/lib/animations'
 import Image from 'next/image'
 import { useState } from 'react'
 import { useUser } from '@/contexts/UserContext'
-import { useRouter } from 'next/navigation'
 
 import LoginIcon from '@/../public/assets/icons/login.svg'
 import DefaultAvatar from '@/../public/assets/icons/default-avatar.svg'
-import { Separator } from '@/components/ui'
 
 const Home = () => {
   const { user, logout } = useUser()
   const [authModal, setAuthModal] = useState<'login' | 'signup' | null>(null)
   const [showDropdown, setShowDropdown] = useState(false)
-  const router = useRouter()
 
   const handleLogout = async () => {
     logout()
@@ -35,7 +33,7 @@ const Home = () => {
       {user && (
         <div className="absolute top-6 right-6">
           <button
-            className="size-12 rounded-full overflow-hidden border-2 border-gray-300 shadow-md"
+            className="size-12 rounded-full overflow-hidden border-2 border-gray-300 shadow-md cursor-pointer"
             onClick={() => setShowDropdown(!showDropdown)}
           >
             <Image
@@ -46,40 +44,12 @@ const Home = () => {
             />
           </button>
 
-          {showDropdown && (
-            <div className="absolute right-0 mt-2 w-52 bg-white rounded-md shadow-lg z-10 border border-gray-200">
-              <div className="px-4 py-2 text-sm text-gray-700 font-semibold w-full overflow-hidden text-ellipsis">
-                {user.user_metadata?.name || user.email}
-              </div>
-
-              <Separator className="my-1 bg-black/25" />
-
-              <button
-                onClick={() => {
-                  router.push('/saved')
-                  setShowDropdown(false)
-                }}
-                className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-              >
-                Saved Palettes
-              </button>
-              <button
-                onClick={() => {
-                  router.push('/history')
-                  setShowDropdown(false)
-                }}
-                className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-              >
-                History
-              </button>
-              <button
-                onClick={handleLogout}
-                className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 cursor-pointer"
-              >
-                Logout
-              </button>
-            </div>
-          )}
+          <ProfileDropdown
+            user={user}
+            showDropdown={showDropdown}
+            setShowDropdown={setShowDropdown}
+            handleLogout={handleLogout}
+          />
         </div>
       )}
 

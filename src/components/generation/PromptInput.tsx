@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Textarea } from '@/components/ui'
+import { Button, Textarea } from '@/components'
 import { Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { fadeInVariant } from '@/lib/animations'
