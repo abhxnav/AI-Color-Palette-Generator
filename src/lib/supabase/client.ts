@@ -8,3 +8,8 @@ export const supabaseClient = createClient<Database>(
   supabase.url,
   supabase.publicKey
 )
+
+export const supabaseAdmin = createClient<Database>(
+  supabase.url,
+  supabase.serviceRoleKey
+)

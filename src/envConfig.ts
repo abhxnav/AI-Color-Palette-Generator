@@ -5,6 +5,7 @@ export const envConfig = {
   supabase: {
     url: String(process.env.NEXT_PUBLIC_SUPABASE_PROJECT_URL),
     publicKey: String(process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY),
+    serviceRoleKey: String(process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY),
   },
 }
 
