@@ -75,6 +75,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = async () => {
     try {
       await signOut()
+      router.push('/')
       toast.success('Signed out successfully!')
     } catch (error: any) {
       toast.error(error.message || 'Failed to logout. Please try again!')

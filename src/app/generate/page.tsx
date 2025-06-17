@@ -1,14 +1,23 @@
 'use client'
 
-import { ColorPalette, Logo, PromptInput } from '@/components'
-import { toast } from 'sonner'
 import { useState } from 'react'
+import {
+  ColorPalette,
+  Logo,
+  ProfileButton,
+  PromptInput,
+  SavedPalettesList,
+} from '@/components'
+import { toast } from 'sonner'
 import { generatePaletteFromPrompt } from '@/lib/generators/generatePaletteFromPrompt'
+import { useUser } from '@/contexts/UserContext'
 
 const Generate = () => {
   const [inputPrompt, setInputPrompt] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [palette, setPalette] = useState<PaletteColor[] | null>(null)
+
+  const { user } = useUser()
 
   const handleGeneration = async () => {
     try {
@@ -29,18 +38,37 @@ const Generate = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className="min-w-[300px] w-[25vw] h-screen flex flex-col gap-10 p-7">
-        <Logo className="text-5xl!" />
-        <PromptInput
-          inputPrompt={inputPrompt}
-          setInputPrompt={setInputPrompt}
-          handleGeneration={handleGeneration}
-          loading={loading}
-        />
+      <div className="min-w-[300px] w-[25vw] h-screen flex flex-col justify-between p-7 pb-0">
+        <div className="flex flex-col gap-10">
+          {/* Logo */}
+          <Logo className="text-5xl!" />
+
+          {/* Prompt Input */}
+          <PromptInput
+            inputPrompt={inputPrompt}
+            setInputPrompt={setInputPrompt}
+            handleGeneration={handleGeneration}
+            loading={loading}
+          />
+        </div>
+
+        {/* Saved list */}
+        {user && (
+          <div className="flex-grow my-6 overflow-y-auto">
+            <SavedPalettesList />
+          </div>
+        )}
+
+        {/* Profile button */}
+        {user && (
+          <div>
+            <ProfileButton openDirection="up" />
+          </div>
+        )}
       </div>
 
       {/* Divider */}
-      <div className="w-0.5 h-[90vh] bg-border mt-[5vh]" />
+      <div className="w-0.5 h-[95vh] bg-border my-auto" />
 
       {/* Palette */}
       <div className="w-full h-screen p-14">

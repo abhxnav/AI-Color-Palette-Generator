@@ -5,6 +5,8 @@ export { default as SignupModal } from '@/components/auth/SignupModal'
 // Generation
 export { default as PromptInput } from '@/components/generation/PromptInput'
 export { default as ColorPalette } from '@/components/generation/ColorPalette'
+export { default as SavedPalettesList } from '@/components/generation/SavedPalettesList'
+export { default as ProfileButton } from '@/components/generation/ProfileButton'
 
 // Landing
 export { default as AnimatedLogo } from '@/components/landing/AnimatedLogo'
