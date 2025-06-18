@@ -9,11 +9,7 @@ import {
   tapBounceVariant,
 } from '@/lib/animations'
 import { shimmerEffect } from '@/lib/utils'
-
-interface PaletteColor {
-  label: string
-  hex: string
-}
+import { PaletteColor } from '@/types/types'
 
 interface ColorPaletteProps {
   colorPalette: PaletteColor[] | null

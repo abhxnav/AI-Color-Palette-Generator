@@ -36,7 +36,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      palettes: {
+      saved: {
         Row: {
           colors: Json | null
           created_at: string | null

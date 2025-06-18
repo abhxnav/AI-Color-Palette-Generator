@@ -11,6 +11,7 @@ import {
 import { toast } from 'sonner'
 import { generatePaletteFromPrompt } from '@/lib/generators/generatePaletteFromPrompt'
 import { useUser } from '@/contexts/UserContext'
+import { PaletteColor } from '@/types/types'
 
 const Generate = () => {
   const [inputPrompt, setInputPrompt] = useState<string>('')
@@ -26,7 +27,7 @@ const Generate = () => {
 
       const pairs = await generatePaletteFromPrompt(inputPrompt)
 
-      setPalette(pairs)
+      setPalette(pairs as PaletteColor[])
     } catch (error: any) {
       toast.error('Failed to generate color palette.')
       console.error('Error generating color palette:', error.message)
