@@ -33,9 +33,18 @@ const Generate = () => {
       const pairs = await generatePaletteFromPrompt(inputPrompt)
 
       setPalette(pairs as PaletteColor[])
-    } catch (error: any) {
-      toast.error('Failed to generate color palette.')
-      console.error('Error generating color palette:', error.message)
+    } catch (error: unknown) {
+      let errorMessage =
+        'Unknown error occurred while generating color palette.'
+
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === 'string') {
+        errorMessage = error
+      }
+
+      toast.error(errorMessage)
+      console.error('Error generating color palette:', errorMessage)
     } finally {
       setLoading(false)
     }

@@ -1,10 +1,11 @@
 'use client'
 
 import { Separator } from '@/components'
+import { User } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 
 interface ProfileDropdownProps {
-  user: any
+  user: User | null
   showDropdown: boolean
   setShowDropdown: (show: boolean) => void
   handleLogout: () => void
@@ -26,7 +27,7 @@ const ProfileDropdown = ({
       } ${className} absolute right-0 mt-2 w-52 bg-white rounded-md shadow-lg z-10 border border-gray-200`}
     >
       <div className="px-4 py-2 text-sm text-gray-700 font-semibold w-full overflow-hidden text-ellipsis">
-        {user!.user_metadata?.name || user.email}
+        {user?.user_metadata?.name || user?.email}
       </div>
 
       <Separator className="my-1 bg-black/25" />
