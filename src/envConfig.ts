@@ -1,6 +1,7 @@
 export const envConfig = {
   openRouter: {
     apiKey: String(process.env.OPENROUTER_API_KEY),
+    aiModel: String(process.env.OPENROUTER_AI_MODEL),
   },
   supabase: {
     url: String(process.env.NEXT_PUBLIC_SUPABASE_PROJECT_URL),

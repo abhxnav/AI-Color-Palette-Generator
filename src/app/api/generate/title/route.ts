@@ -18,7 +18,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     const requestBody = {
-      model: 'deepseek/deepseek-prover-v2:free',
+      model: openRouter.aiModel,
       messages: [
         {
           role: 'system',
