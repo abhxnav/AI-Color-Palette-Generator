@@ -41,7 +41,7 @@ const ProfileButton = ({ openDirection = 'down' }: ProfileButtonProps) => {
               alt="Profile"
               width={200}
               height={200}
-              className="size-12 rounded-full overflow-hidden border-2 border-gray-300"
+              className="size-10 rounded-full overflow-hidden border-2 border-gray-300"
             />
             <span className="text-foreground text-s">
               {user?.user_metadata?.full_name}
