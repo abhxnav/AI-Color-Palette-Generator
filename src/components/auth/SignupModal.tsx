@@ -41,8 +41,16 @@ const SignupModal = ({ isOpen, onClose, onSwitch }: SignupModalProps) => {
         toast.success('Sign up successful! Please check your email to verify.')
         onClose()
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Something went wrong')
+    } catch (error: unknown) {
+      let errorMessage = 'Something went wrong'
+
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === 'string') {
+        errorMessage = error
+      }
+
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }

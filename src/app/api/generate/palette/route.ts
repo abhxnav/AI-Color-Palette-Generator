@@ -64,13 +64,19 @@ export const POST = async (req: NextRequest) => {
       error: false,
       colors: userRequestResponse?.choices[0]?.message?.content,
     })
-  } catch (err: any) {
+  } catch (err: unknown) {
+    let errorMessage = 'Unknown error occurred while generating color palette.'
+
+    if (err instanceof Error) {
+      errorMessage = err.message
+    } else if (typeof err === 'string') {
+      errorMessage = err
+    }
+
     return NextResponse.json(
       {
         error: true,
-        errorMessage:
-          err?.message ||
-          'Unknown error occurred while generating color palette.',
+        errorMessage: errorMessage,
       },
       { status: 500 }
     )

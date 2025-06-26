@@ -2,12 +2,13 @@
 
 import { signOut } from '@/actions/auth.actions'
 import { supabaseClient } from '@/lib/supabase/client'
+import { User } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 interface UserContext {
-  user: any
+  user: User | null
   isAuthenticated: boolean
   isLoading: boolean
   logout: () => void
@@ -21,7 +22,7 @@ const UserContext = createContext<UserContext>({
 })
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const router = useRouter()
@@ -70,15 +71,23 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     )
 
     return () => listener?.subscription.unsubscribe()
-  }, [])
+  }, [router])
 
   const logout = async () => {
     try {
       await signOut()
       router.push('/')
       toast.success('Signed out successfully!')
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to logout. Please try again!')
+    } catch (error: unknown) {
+      let errorMessage = 'Failed to logout. Please try again!'
+
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === 'string') {
+        errorMessage = error
+      }
+
+      toast.error(errorMessage)
     }
   }
 

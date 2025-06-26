@@ -34,8 +34,16 @@ const LoginModal = ({ isOpen, onClose, onSwitch }: LoginModalProps) => {
         router.push('/generate')
         toast.success('Login successful!')
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Something went wrong')
+    } catch (error: unknown) {
+      let errorMessage = 'Something went wrong'
+
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === 'string') {
+        errorMessage = error
+      }
+
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -47,8 +55,16 @@ const LoginModal = ({ isOpen, onClose, onSwitch }: LoginModalProps) => {
       localStorage.setItem('google-login-success', '1') // flag for toast
 
       await signInWithGoogle()
-    } catch (error: any) {
-      toast.error(error.message || 'Something went wrong')
+    } catch (error: unknown) {
+      let errorMessage = 'Something went wrong'
+
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === 'string') {
+        errorMessage = error
+      }
+
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -101,7 +117,7 @@ const LoginModal = ({ isOpen, onClose, onSwitch }: LoginModalProps) => {
             )}
           </Button>
           <div className="text-sm">
-            Don't have an account?{' '}
+            Don&rsquo;t have an account?{' '}
             <span
               className="text-primary brightness-80 underline cursor-pointer hover:brightness-90"
               onClick={onSwitch}
